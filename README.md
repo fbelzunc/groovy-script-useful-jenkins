@@ -34,3 +34,25 @@ for (Node node : nodes) {
   }
 }
 ```
+
+## Iterate all the builds inside a Jenkins instance
+
+```
+import hudson.util.*;
+
+Jenkins jenkins = Jenkins.getInstance();
+List<hudson.model.Item> allItems = jenkins.getAllItems();
+
+for (Item item : allItems) {
+  println("Item Full Name: " + item.getFullName());
+  if (item instanceof Job) {
+    Job job = item;
+    RunList<? extends Run<?,?>> builds = job.getBuilds();
+    for (Run<?,?> build : builds) {
+      println("Job Full Name: " + job.getFullName() + " - Build: " + build.getNumber());
+    }
+
+  }
+  println("-----------------------");
+}
+```
