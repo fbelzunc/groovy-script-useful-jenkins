@@ -3,9 +3,9 @@ Recollection of useful groovy script for troubleshooting Jenkins issues.
 
 ## List specific type of jobs
 
+```
 def jobs = hudson.model.Hudson.instance.items
 
-```
 jobs.each { job ->
     if (job instanceof org.jenkinsci.plugins.workflow.job.WorkflowJob)
     	println("${job.name}\n")
@@ -54,5 +54,18 @@ for (Item item : allItems) {
 
   }
   println("-----------------------");
+}
+```
+## List (recursive) jobs (non pipelines) with SCMTrigger configured
+
+```
+def jobs = Jenkins.getInstance().getAllItems();
+
+jobs.each { job -> if (job instanceof hudson.model.AbstractProject) {
+    job.triggers().each { trigger -> if (trigger instanceof hudson.triggers.SCMTrigger) {
+        println(job.getClass().toString() + " (" + job.getFullDisplayName() + ") -----> ${trigger.spec}\n")
+      }
+    }
+  }
 }
 ```
