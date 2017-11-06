@@ -69,3 +69,23 @@ jobs.each { job -> if (job instanceof hudson.model.AbstractProject) {
   }
 }
 ```
+
+## Get all jobs with a specific trigger
+
+```
+import hudson.model.*
+import hudson.triggers.*
+import org.jenkinsci.plugins.workflow.job.WorkflowJob
+import hudson.maven.*
+import org.jenkinsci.plugins.ghprb.GhprbTrigger
+TriggerDescriptor GHPRB_TRIGGER_DESCRIPTOR = Hudson.instance.getDescriptorOrDie(GhprbTrigger.class)
+Jenkins.getInstance().getAllItems().each { it ->
+  if (it instanceof FreeStyleProject || it instanceof MavenModule || it instanceof WorkflowJob) {
+    def ghprbtrigger = it.getTriggers().get(GHPRB_TRIGGER_DESCRIPTOR)
+    
+    if (ghprbtrigger && ghprbtrigger instanceof GhprbTrigger) {
+      	println("Job " + it.getFullName() + " has GhprbTrigger enabled")
+    }
+  }
+}
+```
